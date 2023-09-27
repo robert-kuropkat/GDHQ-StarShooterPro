@@ -11,18 +11,16 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(Random.Range(-10.0f,10.0f), 8, 0);
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         if (transform.position.y < -8.0f) { transform.position = new Vector3(Random.Range(-10.0f, 10.0f), 8, 0);  }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
 
         if (other.tag == "Laser")
