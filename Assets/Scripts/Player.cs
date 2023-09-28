@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _shields;
 
+    private int _score = 0;
+
     //private Animator _shieldAnimation;
 
     //
