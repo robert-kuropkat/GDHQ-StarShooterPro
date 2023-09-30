@@ -5,36 +5,25 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    [SerializeField]
-    private float _speed = 3.5f;
-    [SerializeField]
-    private float _speedMultiplier = 2;
-    [SerializeField]
-    private GameObject _laserPrefab;
-    [SerializeField]
-    private GameObject _tripleShotPrefab;
-    [SerializeField]
-    private float _fireRate = 0.5f;
-    [SerializeField]
-    private float _canFire = -1f;
-    [SerializeField]
-    private int _lives = 3;
-    [SerializeField]
-    private GameObject _spawnManager;
-    [SerializeField]
-    private bool _tripleShot = false;
-    [SerializeField]
-    private bool _shieldsUp = false;
-    [SerializeField]
-    private int _disableTripleShot = 5;
-    [SerializeField]
-    private int _disableSpeedBoost = 5;
-    [SerializeField]
-    private float _playerSpeed;
-    [SerializeField]
-    private GameObject _shields;
+    [SerializeField] private float _speed = 3.5f;
+    [SerializeField] private float _speedMultiplier = 2;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _tripleShotPrefab;
+    [SerializeField] private GameObject _rightEngineDamage;
+    [SerializeField] private GameObject _leftEngineDamage;
+    [SerializeField] private float _fireRate = 0.5f;
+    [SerializeField] private float _canFire = -1f;
+    [SerializeField] private int _lives = 3;
+    [SerializeField] private GameObject _spawnManager;
+    [SerializeField] private bool _tripleShot = false;
+    [SerializeField] private bool _shieldsUp = false;
+    [SerializeField] private int _disableTripleShot = 5;
+    [SerializeField] private int _disableSpeedBoost = 5;
+    [SerializeField] private float _playerSpeed;
+    [SerializeField] private GameObject _shields;
+    [SerializeField] private int _score = 0;
 
-    private int _score = 0;
+    private UIManager _uiManager;
 
     //private Animator _shieldAnimation;
 
@@ -49,8 +38,14 @@ public class Player : MonoBehaviour
 
         //this.transform.GetChild(0).gameObject.SetActive(false);
         _shields.SetActive(false);
+        _rightEngineDamage.SetActive(false);
+        _leftEngineDamage.SetActive(false);
+
         transform.position = new Vector3(0, 0, 0);
         _playerSpeed = _speed;
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        if (_uiManager == null) { Debug.LogError("UI Manager is null!~"); }
         
     }
     void Update()
@@ -103,6 +98,8 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.015f, 0), Quaternion.identity);
         }
+
+        this.GetComponents<AudioSource>()[0].Play();
     }
 
     public void Damage()
@@ -114,11 +111,33 @@ public class Player : MonoBehaviour
         }
 
         _lives--;
+        _uiManager.UpdateLives(_lives);
 
         if (_lives < 1) {
             _spawnManager.GetComponent<SpawnManager>().PlayerDead();
+            _uiManager.DisplayGameOver();
             Destroy(this.gameObject); 
         }
+
+        switch (_lives)
+        {
+            case 3:
+                _rightEngineDamage.SetActive(false);
+                _leftEngineDamage.SetActive(false);
+                break;
+            case 2:
+                _rightEngineDamage.SetActive(true);
+                break;
+            case 1:
+                _leftEngineDamage.SetActive(true);
+                break;
+        }
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
     }
 
     //
