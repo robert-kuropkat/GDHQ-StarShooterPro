@@ -31,6 +31,12 @@ public class UIManager : MonoBehaviour
             Debug.Log("Reset the game...");
             SceneManager.LoadScene("Game");
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+            Debug.Log("Quiting Game");
+        }
     }
 
     public void UpdateScore(int score)
@@ -40,6 +46,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int lives)
     {
+        if (lives < 0) { lives = 0; };
         _playerLivesImage.sprite = _playerLivesSprite[lives];
 
     }
