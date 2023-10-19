@@ -4,17 +4,40 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Game UI Manager.
+/// </summary>
+/// 
+/// <remarks>
+/// Instantiated By:
+/// Attached To: Game Scene Canvas
+/// 
+/// This class manages the user interaction with the game features (not game play) such 
+/// as exiting, restarting, etc.
+/// </remarks>
+/// 
+
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Text _scoreText;
-    [SerializeField] private Text _gameOverText;
-    [SerializeField] private Text _resetLevelText;
-    [SerializeField] private Image _playerLivesImage;
-    [SerializeField] private Sprite[] _playerLivesSprite;
 
+    /// <summary>
+    /// The following variables are populated in the Inspector.
+    /// </summary>
+    [SerializeField] private Image      _playerLivesImage;
+    [SerializeField] private Sprite[]   _playerLivesSprite;
+    [SerializeField] private Text       _scoreText;
+    [SerializeField] private Text       _gameOverText;
+    [SerializeField] private Text       _resetLevelText;
+
+    /// <summary>
+    /// Private Variables
+    /// </summary>
     private bool _gameOver = false;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Initialize all game objects here, rather than above so they are reset
+    /// on game re-start.
+    /// </summary>
     void Start()
     {
         _gameOverText.gameObject.SetActive(false);
@@ -23,7 +46,11 @@ public class UIManager : MonoBehaviour
         _gameOver = false;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Sit and wait for the 'R' (restart) 'Escape' (exit) keys.
+    /// </summary>
+    /// 
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R) && _gameOver)
@@ -39,18 +66,91 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update score UI element by passing in new score.
+    /// 
+    /// <example>
+    ///    <code>
+    ///    private UIManager _uiManager;
+    ///    _uiManager = ("Canvas").GetComponent&lt;UIManager&gt;();
+    ///    _uiManager.UpdateScore(10);
+    ///    </code>
+    /// </example>
+    /// 
+    /// </summary>
+    /// 
+    /// <param name="score">Current Score</param>
+    /// 
+    /// <remarks>
+    /// This method does not manage or track the score.  It simple displays what is passed to it.
+    /// </remarks>
+    /// 
+
     public void UpdateScore(int score)
     {
         _scoreText.text = "Score: " + score;
     }
 
+    /// <summary>
+    /// Update player health (lives) graphic
+    /// 
+    /// <example>
+    ///    <code>
+    ///    private UIManager _uiManager;
+    ///    _uiManager = ("Canvas").GetComponent&lt;UIManager&gt;();
+    ///    _uiManager.UpdateLives(_lives);
+    ///    </code>
+    /// </example>
+    /// 
+    /// </summary>
+    /// 
+    /// <param name="lives">Number of remaining lives</param>
+    /// 
+    /// <remarks>
+    /// This method only updates the health graphic.  It does not maintain
+    /// the actual count of remaining lives.
+    /// </remarks>
+    /// 
+
     public void UpdateLives(int lives)
     {
         if (lives < 0) { lives = 0; };
+        // lives = (lives < 0) ? 0 : lives; 
         _playerLivesImage.sprite = _playerLivesSprite[lives];
 
     }
 
+    /// <summary>
+    /// Handel received Player Dead message from Player
+    /// </summary>
+    /// 
+    /// <remarks><
+    /// Perform all end of game steps when the Player informs the UI Manager it has died.
+    /// </remarks>
+    /// 
+
+    public void PlayerDead()
+    {
+        this.DisplayGameOver();
+    }
+
+    /// <summary>
+    /// Display end of game graphics
+    /// 
+    /// <example>
+    ///    <code>
+    ///    private UIManager _uiManager;
+    ///    _uiManager = ("Canvas").GetComponent&lt;UIManager&gt;();
+    ///    _uiManager.DisplayGameOver();
+    ///    </code>
+    /// </example>
+    /// 
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Enable the various End of Game graphics and instructions.
+    /// </remarks>
+    /// 
     public void DisplayGameOver()
     {
         _gameOverText.gameObject.SetActive(true);
@@ -58,6 +158,24 @@ public class UIManager : MonoBehaviour
         _gameOver = true;
         StartCoroutine(FlickerGameOver());
     }
+
+    /// <summary>
+    /// IEnumerator: Make the Game Over text flicker
+    /// 
+    /// <example>
+    ///    <code>
+    ///    this.StartCoroutine(FlickerGameOver());
+    ///    </code>
+    /// </example>
+    /// 
+    /// </summary>
+    /// 
+    /// <returns>WaitForSeconds(0.1f)</returns>
+    /// 
+    /// <remarks>
+    /// Cause 'Game Over' text to flicker switching object between active and inactive.
+    /// </remarks>
+    /// 
 
     IEnumerator FlickerGameOver()
     {

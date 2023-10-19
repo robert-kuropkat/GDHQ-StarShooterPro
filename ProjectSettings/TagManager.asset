@@ -9,6 +9,8 @@ TagManager:
   - SpeedPowerUp
   - TripleShotPowerUp
   - ShieldPowerUp
+  - EnemyLaser
+  - Asteroid
   layers:
   - Default
   - TransparentFX

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -364,25 +364,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff067f9fa0ed6994291429fd6ad76892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
-  _speedMultiplier: 2
   _laserPrefab: {fileID: 5254077678212345205, guid: ed64afb3a867fe2428b58265a431e3c1,
     type: 3}
   _tripleShotPrefab: {fileID: 4521968335429272375, guid: f4bfb6edbb2b9554d9f7fa145a28a7a5,
     type: 3}
   _rightEngineDamage: {fileID: 1166114045}
   _leftEngineDamage: {fileID: 1759572327}
+  _spawnManager: {fileID: 1947071139}
+  _shields: {fileID: 48546032}
+  _explostion: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
+  _playerSpeed: 0
+  _speed: 5
   _fireRate: 0.15
   _canFire: -1
   _lives: 3
-  _spawnManager: {fileID: 1947071139}
+  _score: 0
   _tripleShot: 0
   _shieldsUp: 0
   _disableTripleShot: 5
+  _speedMultiplier: 2
   _disableSpeedBoost: 5
-  _playerSpeed: 0
-  _shields: {fileID: 48546032}
-  _score: 0
 --- !u!212 &282774660
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1168,15 +1169,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9adbd770ff2d8764dba31e79ab43246b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scoreText: {fileID: 1573346099}
-  _gameOverText: {fileID: 1456752024}
-  _resetLevelText: {fileID: 147371184}
   _playerLivesImage: {fileID: 2041470715}
   _playerLivesSprite:
   - {fileID: 21300000, guid: ba53e111f0125654cabfd4eefaf3a657, type: 3}
   - {fileID: 21300000, guid: 80fba5ece7697c44eacc036539c1b552, type: 3}
   - {fileID: 21300000, guid: 482c8e4c0346b704aa5f1760c3c989d5, type: 3}
   - {fileID: 21300000, guid: 9fe6f40efddf0b64fb68a3382b14a4db, type: 3}
+  _scoreText: {fileID: 1573346099}
+  _gameOverText: {fileID: 1456752024}
+  _resetLevelText: {fileID: 147371184}
 --- !u!1 &1166114045
 GameObject:
   m_ObjectHideFlags: 0
@@ -1925,11 +1926,11 @@ MonoBehaviour:
     type: 3}
   _enemyContainer: {fileID: 1619051253}
   _powerUpContainer: {fileID: 208403366}
-  _spawnEnemyWaitTime: 5
   _powerUps:
   - {fileID: 7875805119134380262, guid: 8ba359072839823428546247f7565d46, type: 3}
   - {fileID: 5870216385930598000, guid: 5fc79fe2357778e4790e0bd08e60a598, type: 3}
   - {fileID: 3997903460912281312, guid: f1fd9960b1830f343933110203e39e81, type: 3}
+  _spawnEnemyWaitTime: 5
 --- !u!4 &1947071141
 Transform:
   m_ObjectHideFlags: 0
