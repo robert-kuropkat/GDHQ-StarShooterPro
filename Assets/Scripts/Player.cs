@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float  _playerSpeed;
     [SerializeField] private float  _speed              = 3.5f;
+    [SerializeField] private float  _thruster           = 1.5f;
     [SerializeField] private float  _fireRate           = 0.5f;
     [SerializeField] private float  _canFire            = -1f;
     [SerializeField] private int    _lives              = 3;
@@ -84,6 +85,8 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
 
+        _playerSpeed = Input.GetKey(KeyCode.LeftShift) ? _speed * _thruster : _speed;
+
         if (  Input.GetKeyDown(KeyCode.Space) 
            && Time.time > _canFire) { FireLaser(); }
 
@@ -128,6 +131,7 @@ public class Player : MonoBehaviour
         // TODO: Player gets stuck off screen.
         //      Have a bug in here, probably the boundaries being a bit too much (left/right)
         //      during one game play I managed to get the player stuck off screen...
+        //      Looks like if I release right around x = 11.52991 it gets stuck.
         //
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
