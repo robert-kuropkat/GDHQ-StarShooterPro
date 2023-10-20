@@ -43,7 +43,10 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Private Variables
     /// </summary>
-    private UIManager _uiManager;
+    private UIManager      _uiManager;
+    private SpriteRenderer _spriteRenderer;
+    private Color          _originalSpriteColor;
+    private int            _shieldHitCount = 0;
 
 
     /// <summary>
@@ -62,6 +65,8 @@ public class Player : MonoBehaviour
         _shields.SetActive(false);
         _rightEngineDamage.SetActive(false);
         _leftEngineDamage.SetActive(false);
+        _spriteRenderer = _shields.GetComponent<SpriteRenderer>();
+        _originalSpriteColor = _spriteRenderer.color;
 
         transform.position = new Vector3(0, 0, 0);
         _playerSpeed = _speed;
@@ -182,7 +187,21 @@ public class Player : MonoBehaviour
     {
         if (_shieldsUp) 
         {
-            this.DisableShields();
+            _shieldHitCount++;
+            switch (_shieldHitCount)
+            {
+                case 1:
+                    _spriteRenderer.color = new Color(1f, .37f, 0, 1);  //  Weird multiplier intended to get a yellowish color.
+                    break;
+                case 2:
+                    _spriteRenderer.color = Color.red;
+                    break;
+                case 3:
+                    this.DisableShields();
+                    _shieldHitCount = 0;
+                    _spriteRenderer.color = Color.white;                // return to original color.
+                    break;
+            }
             return;
         }
 
@@ -298,7 +317,7 @@ public class Player : MonoBehaviour
     public void ShieldUp()
     {
         _shields.SetActive(true);
-        _shieldsUp = true;
+        _shieldsUp = true;   // TODO:  This seems unncessary.  Can't I just check _shields.SetActive()?
     }
 
     /// <summary>
