@@ -26,13 +26,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image      _playerLivesImage;
     [SerializeField] private Sprite[]   _playerLivesSprite;
     [SerializeField] private Text       _scoreText;
+    [SerializeField] private Text       _ammoText;
     [SerializeField] private Text       _gameOverText;
     [SerializeField] private Text       _resetLevelText;
 
     /// <summary>
     /// Private Variables
     /// </summary>
-    private bool _gameOver = false;
+    private bool _gameOver  = false;
+    private bool _outOfAmmo = false;
 
     /// <summary>
     /// Initialize all game objects here, rather than above so they are reset
@@ -43,7 +45,8 @@ public class UIManager : MonoBehaviour
         _gameOverText.gameObject.SetActive(false);
         _resetLevelText.gameObject.SetActive(false);
         _scoreText.text = "Score: " + 0;
-        _gameOver = false;
+        _gameOver  = false;
+        _outOfAmmo = false;
     }
 
     /// <summary>
@@ -121,7 +124,24 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Handel received Player Dead message from Player
+    /// Manage ammo count display
+    /// </summary>
+    /// 
+    /// <param name="ammo">Current ammo count</param>
+    /// 
+    /// <remarks>
+    /// </remarks>
+    /// 
+
+    public void updateAmmo(int ammo)
+    {
+        _ammoText.text = "Ammo: " + ammo;
+        _outOfAmmo = (ammo > 0) ? false : true;
+        if (_outOfAmmo) { this.DisplayOutOfAmmo();  }
+    }
+
+    /// <summary>
+    /// Handle received Player Dead message from Player
     /// </summary>
     /// 
     /// <remarks><
@@ -151,12 +171,37 @@ public class UIManager : MonoBehaviour
     /// Enable the various End of Game graphics and instructions.
     /// </remarks>
     /// 
+
     public void DisplayGameOver()
     {
         _gameOverText.gameObject.SetActive(true);
         _resetLevelText.gameObject.SetActive(true);
         _gameOver = true;
         StartCoroutine(FlickerGameOver());
+    }
+
+    /// <summary>
+    /// Display out of ammo graphics
+    /// 
+    /// <example>
+    ///    <code>
+    ///    private UIManager _uiManager;
+    ///    _uiManager = ("Canvas").GetComponent&lt;UIManager&gt;();
+    ///    _uiManager.DisplayOutOfAmmo();
+    ///    </code>
+    /// </example>
+    /// 
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Enable the various End of Game graphics and instructions.
+    /// </remarks>
+    /// 
+
+    public void DisplayOutOfAmmo()
+    {
+        _outOfAmmo = true;
+        StartCoroutine(FlickerOutOfAmmo());
     }
 
     /// <summary>
@@ -186,5 +231,36 @@ public class UIManager : MonoBehaviour
             flash = _gameOverText.gameObject.activeSelf ? false : true;
             _gameOverText.gameObject.SetActive(flash);
         }
+    }
+
+    /// <summary>
+    /// IEnumerator: Make the ammo count text flicker ammo count equals zero
+    /// 
+    /// <example>
+    ///    <code>
+    ///    this.StartCoroutine(FlickerOutOfAmmo());
+    ///    </code>
+    /// </example>
+    /// 
+    /// </summary>
+    /// 
+    /// <returns>WaitForSeconds(0.1f)</returns>
+    /// 
+    /// <remarks>
+    /// Cause 'Ammo' text to flicker switching object between active and inactive.
+    /// </remarks>
+    /// 
+
+    IEnumerator FlickerOutOfAmmo()
+    {
+        while (_outOfAmmo)
+        {
+            yield return new WaitForSeconds(0.1f);
+            _ammoText.color = Color.red;
+            bool flash;
+            flash = _ammoText.gameObject.activeSelf ? false : true;
+            _ammoText.gameObject.SetActive(flash);
+        }
+        _ammoText.color = Color.white;
     }
 }

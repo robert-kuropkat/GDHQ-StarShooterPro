@@ -29,7 +29,8 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// Private Variables
     /// </summary>
-    private bool _stopSpawning = false;
+    // private bool _stopSpawning = false;
+    public bool Spawning { get; private set; } = false;
 
     /// <summary>
     /// Initiate spawning of Enemies and PowerUps
@@ -42,6 +43,7 @@ public class SpawnManager : MonoBehaviour
 
     public void StartSpawning()
     {
+        Spawning = true;
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerUp());
     }
@@ -56,7 +58,7 @@ public class SpawnManager : MonoBehaviour
     /// </remarks>
     /// 
 
-    public void PlayerDead() { _stopSpawning = true; }
+    public void PlayerDead() { Spawning = false; }
 
     /// <summary>
     /// IEnumerator: Spawn new Enemy game objects
@@ -81,7 +83,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnEnemyRoutine()
     {
         yield return new WaitForSeconds(3);     // 3 second pause before start of game
-        while (!_stopSpawning)
+        while (Spawning)
         {
             GameObject newEnemy = GetNewEnemy();
             newEnemy.transform.parent = _enemyContainer.transform;
@@ -112,7 +114,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnPowerUp()
     {
         yield return new WaitForSeconds(3);     // 3 second pause before start of game
-        while (!_stopSpawning)
+        while (Spawning)
         {
             yield return new WaitForSeconds(Random.Range(3, 8));
             GameObject newPowerUp = GetNewPowerUp();

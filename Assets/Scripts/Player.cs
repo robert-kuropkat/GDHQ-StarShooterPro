@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float  _thruster           = 1.5f;
     [SerializeField] private float  _fireRate           = 0.5f;
     [SerializeField] private float  _canFire            = -1f;
+    [SerializeField] private int    _ammoCount          = 15;
     [SerializeField] private int    _lives              = 3;
     [SerializeField] private int    _score              = 0;
     [SerializeField] private bool   _tripleShot         = false;
@@ -46,7 +47,7 @@ public class Player : MonoBehaviour
     private UIManager      _uiManager;
     private SpriteRenderer _spriteRenderer;
     private Color          _originalSpriteColor;
-    private int            _shieldHitCount = 0;
+    private int            _shieldHitCount  = 0;
 
 
     /// <summary>
@@ -73,7 +74,8 @@ public class Player : MonoBehaviour
 
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         if (!_uiManager) { Debug.LogError("UI Manager is NULL!"); }
-        
+        _uiManager.updateAmmo(_ammoCount);
+
     }
 
     /// <summary>
@@ -93,7 +95,8 @@ public class Player : MonoBehaviour
         _playerSpeed = Input.GetKey(KeyCode.LeftShift) ? _speed * _thruster : _speed;
 
         if (  Input.GetKeyDown(KeyCode.Space) 
-           && Time.time > _canFire) { FireLaser(); }
+           && Time.time  > _canFire
+           && _ammoCount > 0) { FireLaser(); }
 
     }
 
@@ -165,7 +168,12 @@ public class Player : MonoBehaviour
         } else {
             _ = Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.015f, 0), Quaternion.identity);
         }
-
+        
+        if (_spawnManager.GetComponent<SpawnManager>().Spawning) { 
+            _ammoCount--;
+            _uiManager.updateAmmo(_ammoCount);
+        }
+        
         this.GetComponents<AudioSource>()[0].Play();
     }
 
@@ -228,6 +236,16 @@ public class Player : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// Handel collision with Enemy objects or Enemy fire
+    /// </summary>
+    /// 
+    /// <param name="other"></param>
+    /// 
+    /// <remarks>
+    /// </remarks>
+    /// 
 
     private void OnTriggerEnter2D(Collider2D other)
     {
